@@ -48,8 +48,8 @@ const Products = () => {
               {data.length > 0 && data.map((el) => (
                 <TableRow key={el.id} className="hover:bg-gray-100">
                   <TableCell sx={{display:'flex',gap:"15px"}} >
-                   <img style={{width:"50px",height:"50px" }} src={URL+ "/images/" + el.images} alt="" />
-                    <p>{el.productName}</p>
+                   <img style={{width:"50px",height:"50px" }} src={URL + "/images/" + el.images} alt="" />
+                    <p className='mt-[13px]'>{el.productName}</p>
                   </TableCell>
                   <TableCell>{el.quantity > 0 ? el.quantity +  ' in Stock' : 'Out of Stock'}</TableCell>
                   <TableCell>{el.categoryName}</TableCell>
