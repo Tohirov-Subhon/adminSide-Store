@@ -82,6 +82,9 @@ const Other = () => {
     handleClose2()
   }
 
+
+
+
 return (
   <>
   <div>
@@ -91,13 +94,13 @@ return (
 
     </div>
 
-    <div className="flex gap-[30px] flex-wrap gap-[20px]">
+    <div className="flex gap-[30px] flex-wrap ">
 
     {
       data.map((el) => (
         <div key={el.id} className="w-[200px] h-[170px] p-[20px_20px] flex justify-between mb-[50px] border-[1px] border-[gray] rounded-[5px] ">
           <div className=" ">
-          <img className="w-[100px] h-[80px] mb-[15px]" src={URL + '/images/' + el.categoryImage} alt="" />
+          <img className="w-[100px] h-[80px] mb-[15px] rounded-[5px] " src={URL + '/images/' + el.categoryImage} alt="" />
           <p>{el.categoryName}</p>
           </div>
           <div>
@@ -124,14 +127,14 @@ return (
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <input  className="w-[250px] h-[30px] border-[1.5px] rounded-[3px] pl-[10px] mb-[20px] block " type="text" placeholder="Name" value={addName} onChange={(e) => setAddName(e.target.value)} />
+            <input  className="w-[250px] h-[30px] border-[1.5px] rounded-[3px] pl-[10px] mb-[20px] block  " type="text" placeholder="Name" value={addName} onChange={(e) => setAddName(e.target.value)} />
             <input className="w-[250px] h-[30px] border-[1.5px] rounded-[3px] pl-[10px] mb-[20px] cursor-pointer " type="file" multiple placeholder="Name"  onChange={(e) => setAddFile(e.target.files)}  />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
+          <Button onClick={handleClose}>Close</Button>
           <Button onClick={addCateg} autoFocus>
-            Agree
+            Save
           </Button>
         </DialogActions>
       </Dialog>
@@ -155,9 +158,9 @@ return (
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose2}>Disagree</Button>
+          <Button onClick={handleClose2}>Close</Button>
           <Button onClick={editCateg} autoFocus>
-            Agree
+            Save
           </Button>
         </DialogActions>
       </Dialog>

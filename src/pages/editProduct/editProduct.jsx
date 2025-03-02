@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react"
-import {Box,Button,TextField,Typography,Select,MenuItem,FormControlLabel,Switch,Chip,IconButton,Grid,Paper,ToggleButtonGroup,ToggleButton,} from "@mui/material"
+import {Box,Button,TextField,Typography,Select,MenuItem,FormControlLabel,Switch,Chip,IconButton,Grid,ToggleButtonGroup,ToggleButton,} from "@mui/material"
 import FormatBoldIcon from "@mui/icons-material/FormatBold"
 import FormatItalicIcon from "@mui/icons-material/FormatItalic"
 import FormatUnderlinedIcon from "@mui/icons-material/FormatUnderlined"
@@ -8,30 +8,26 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import AddIcon from "@mui/icons-material/Add"
 import DeleteIcon from "@mui/icons-material/Delete"
 import { useDispatch, useSelector } from "react-redux"
-import { addColorr, addProductt, getBrand, getCategory, getColor, getSubCateg } from "../../api/productSlice"
+import { addColorr, addProductt, editProductt, getBrand, getCategory, getColor, getProductById, getSubCateg } from "../../api/productSlice"
 import { store } from "../../store/store"
 
 
-// import Button from '@mui/material/Button';
+
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 
 
 
 
-function addProduct() {
+function EditProduct() {
   const [tags, setTags] = useState(["T-Shirt", "Men Clothes", "Summer Collection"])
   const [newTag, setNewTag] = useState("")
   const [formats, setFormats] = useState(() => [])
-  const [selectedCategory, setSelectedCategory] = useState("")
-  const [selectedSubCategory, setSelectedSubCategory] = useState("")
-  const [selectedColor, setSelectedColor] = useState(null)
-  const [images, setImages] = useState([])
-  const fileInputRef = useRef(null)
+
 
   const handleFormat = (event, newFormats) => {
     setFormats(newFormats)
@@ -48,37 +44,9 @@ function addProduct() {
     setTags(tags.filter((tag) => tag !== tagToDelete))
   }
 
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value)
-    setSelectedSubCategory("")
-  }
+  
 
-  const handleImageUpload = (event) => {
-    const files = Array.from(event.target.files)
-    const newImages = files.map((file) => ({
-      file,
-      preview: URL.createObjectURL(file),
-    }))
-    setImages((prevImages) => [...prevImages, ...newImages].slice(0, 5)) // Limit to 5 images
-  }
-
-  const handleRemoveImage = (index) => {
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index))
-  }
-
-  const handleDragOver = (event) => {
-    event.preventDefault()
-  }
-
-  const handleDrop = (event) => {
-    event.preventDefault()
-    const files = Array.from(event.dataTransfer.files)
-    const newImages = files.map((file) => ({
-      file,
-      preview: URL.createObjectURL(file),
-    }))
-    setImages((prevImages) => [...prevImages, ...newImages].slice(0, 5)) // Limit to 5 images
-  }
+  
 
 
   let dispatch = useDispatch()
@@ -116,28 +84,31 @@ function addProduct() {
   const [addColor,setAddColor] = useState()
 
 
-  const [addName,setAddName] = useState('')
+  let data = useSelector((store) => store.products.productById)
+
+  console.log(data)
+
+  const [addName,setAddName] = useState(data.productName)
   const [addCode,setAddCode] = useState('')
 
-  // const [addQuantity,setAddQuantity] = useState('')
-  const [addDescription,setAddDescription] = useState('')
-  const [addPrice,setAddPrice] = useState('')
-  const [addCateg,setAddCateg] = useState('')
+  const [addDescription,setAddDescription] = useState(data.description)
+  const [addPrice,setAddPrice] = useState(data.price)
+  const [addCateg,setAddCateg] = useState(data.categoryName)
   const [addSubCateg,setAddSubCateg] = useState(null)
   const [addBrand,setAddBrand] = useState(null)
-  const [addCount,setAddCount] = useState('')
-  const [addDiscount,setAddDiscount] = useState('')
+  const [addCount,setAddCount] = useState(data.quantity)
+  const [addDiscount,setAddDiscount] = useState(data.discountPrice)
 
-  const [addSize,setAddSize] = useState('')
-  const [addWeight,setAddWeight] = useState('')
+  const [addSize,setAddSize] = useState(data.size)
+  const [addWeight,setAddWeight] = useState(data.weight)
   const [color,setColor] = useState(null)
-  const [addImage,setAddImage] = useState(null)
   const [check,setCheck] = useState(false)
 
+  const [idx,setIdx] = useState(data.id)
 
   let navigate = useNavigate()
 
-  function add() {
+  function edit() {
     let formdata = new FormData()
     formdata.append('ProductName', addName)
     formdata.append('Code', addCode)
@@ -152,19 +123,43 @@ function addProduct() {
     formdata.append('Size', addSize)
     formdata.append('Weight', addWeight)
     formdata.append('ColorId', color)
-    if(addImage){
-      for(let i = 0; i < addImage.length; i++) {
-        formdata.append('Images', addImage[i])
-      }
-    }
-    dispatch(addProductt(formdata))
+    formdata.append('Id', idx)
+
+    dispatch(editProductt(formdata))
     navigate('/products')
     
     console.log(formdata)
 
   }
 
-  
+
+  let {id} = useParams()
+
+  useEffect(() => {
+    dispatch(getProductById(id))
+  },[id])
+
+  useEffect(()=> {
+    if(data) {
+      if (data) {
+        setAddName(data.productName);
+        setAddDescription(data.description);
+        setAddPrice(data.price);
+        setAddCateg(data.categoryName);
+        setAddSubCateg(data.subCategoryId);
+        setAddBrand(data.brandId);
+        setAddCount(data.quantity);
+        setAddDiscount(data.discountPrice);
+        setAddSize(data.size);
+        setAddWeight(data.weight);
+        setColor(data.colorId);
+        setAddCode(data.code)
+        setIdx(data.id);
+      }
+    }
+  },[data])
+
+  console.log(data)
 
   return (
     <Box sx={{ maxWidth: 1200, margin: "auto", padding: 2 }}>
@@ -179,7 +174,7 @@ function addProduct() {
           <Link to='/products'><Button variant="outlined" sx={{ mr: 1 }}>
             Cancel
           </Button></Link>
-          <Button variant="contained" color="primary" onClick={add}>
+          <Button variant="contained" color="primary" onClick={edit}>
             Save
           </Button>
         </Box>
@@ -303,7 +298,7 @@ function addProduct() {
                   backgroundColor: color.colorName,
                   borderRadius: "50%",
                   cursor: "pointer",
-                  border: selectedColor === color.id ? "2px solid black" : "none",
+                  border: data.color ===  color.colorName ? "2px solid black" : "none",
                 }}
                 onClick={() => setColor(color.id)}
               />
@@ -334,58 +329,9 @@ function addProduct() {
           </Box>
 
 
-          <Typography variant="h6" gutterBottom>
-            Images
-          </Typography>
-          <Paper
-            variant="outlined"
-            
-            sx={{
-              p: 2,
-              textAlign: "center",
-              cursor: "pointer",
-              mb: 2,
-            }}
-            onClick={() => fileInputRef.current.click()}
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-          >
-            <Typography>Click to upload or drag and drop</Typography>
-            <Typography variant="caption" color="textSecondary">
-              PNG, JPG, GIF up to 10MB (max.5)
-            </Typography>
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={(e) => setAddImage(e.target.files)}
-              // accept="image/*"
-              multiple
-              style={{ display: "none" }}
-            />
-          </Paper>
-          {images.map((image, index) => (
-            <Box key={index} sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-              <Box
-                component="img"
-                src={image.preview}
-                sx={{
-                  width: 50,
-                  height: 50,
-                  objectFit: "cover",
-                  mr: 1,
-                }}
-              />
-              <Box sx={{ flexGrow: 1 }}>
-                <Typography variant="body2">{image.file.name}</Typography>
-                <Typography variant="caption" color="textSecondary">
-                  {image.file.type}
-                </Typography>
-              </Box>
-              <IconButton onClick={() => handleRemoveImage(index)} size="small">
-                <DeleteIcon />
-              </IconButton>
-            </Box>
-          ))}
+          
+         
+          
         </Grid>
       </Grid>
 
@@ -414,4 +360,4 @@ function addProduct() {
   )
 }
 
-export default addProduct
+export default EditProduct

@@ -8,7 +8,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const NAVIGATION = [
   { kind: "header", title: "Main items" },
-  { segment: "", title: "Dasboard", icon: <DashboardIcon /> },
+  { segment: "dashboard", title: "Dashboard", icon: <DashboardIcon /> },
   { segment: "orders", title: "Orders", icon: <ShoppingCartIcon /> },
   { segment: "products", title: "Products", icon: <LayersIcon /> },
   { segment: "other", title: "Other", icon: <BarChartIcon /> }

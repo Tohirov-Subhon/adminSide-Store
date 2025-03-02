@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getBrand, getCategory, getColor, getProducts, getSubCateg } from '../../api/productSlice'
+import { getBrand, getCategory, getColor, getProductById, getProducts, getSubCateg } from '../../api/productSlice'
 import { colors } from '@mui/material'
 
 
@@ -12,6 +12,7 @@ const  productsSlice = createSlice({
         color:[],
         brand:[],
         subCategory:[],
+        productById:[]
     },
     reducers: {
     },
@@ -31,6 +32,9 @@ const  productsSlice = createSlice({
         })
         .addCase(getBrand.fulfilled,(state,action) => {
             state.brand = action.payload
+        })
+        .addCase(getProductById.fulfilled,(state,action) => {
+            state.productById = action.payload
         })
     }
 })

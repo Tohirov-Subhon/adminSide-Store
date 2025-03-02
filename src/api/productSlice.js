@@ -84,6 +84,17 @@ export const getColor = createAsyncThunk('products/getColor', async () => {
 })
 
 
+
+export const addColorr = createAsyncThunk('products/addColorr', async (name,{dispatch}) => {
+    try {
+        await axiosRequest.post(`/Color/add-color?ColorName=${name}`)
+        dispatch(getColor())
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+
 export const getSubCateg = createAsyncThunk('products/getSubCateg', async () => {
     try {
         let {data} = await axiosRequest.get('/SubCategory/get-sub-category')
@@ -98,6 +109,51 @@ export const getBrand = createAsyncThunk('products/getBrand', async () => {
     try {
         let {data} = await axiosRequest.get('/Brand/get-brands')
         return data.data
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+
+export const addProductt = createAsyncThunk('products/addProductt', async (formdata,{dispatch}) => {
+    try {
+        await axiosRequest.post('/Product/add-product',formdata)
+        dispatch(getProducts())
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+
+export const getProductById = createAsyncThunk('products/getProductById', async (id) => {
+    try {
+        let {data} = await axiosRequest.get(`/Product/get-product-by-id?id=${id}`)
+        return data.data
+        
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+
+export const editProductt = createAsyncThunk('products/editProductt', async (formdata,{dispatch}) => {
+    try {
+        await axiosRequest.put('/Product/update-product?',formdata)
+        dispatch(getProducts())
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+
+
+
+
+
+export const delImageProduct = createAsyncThunk('products/delImageProduct', async (id,{dispatch}) => {
+    try {
+        await axiosRequest.delete(`/Product/delete-image-from-product?imageId=${id}`)
+        dispatch(getProducts())
     } catch (error) {
         console.log(error)
     }

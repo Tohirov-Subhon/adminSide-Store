@@ -115,6 +115,40 @@ const Dashboard = () => {
       </CardContent>
     </Card>
   </Grid>
+
+  <Grid item xs={12} md={6}>
+    <Card>
+      <CardContent>
+        <Typography variant="h6" gutterBottom>
+        Top Products by Units Sold
+        </Typography>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell>Amount</TableCell>
+                <TableCell>Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {transactions.map((row, index) => (
+                <TableRow key={index}>
+                  <TableCell>{row.name}</TableCell>
+                  <TableCell>{row.date}</TableCell>
+                  <TableCell>{row.amount}</TableCell>
+                  <TableCell>
+                    <Chip label={row.status} color={row.status === "Paid" ? "success" : "warning"} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </CardContent>
+    </Card>
+  </Grid>
 </Grid>
 </Box>
       
